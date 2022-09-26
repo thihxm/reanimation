@@ -14,10 +14,11 @@ namespace Aarthificial.Reanimation.Editor.Common
         {
             float name = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("name"));
             float ai = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("autoIncrement"));
+            float runOnce = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("runOnce"));
             float percentage = EditorGUI.GetPropertyHeight(property.FindPropertyRelative("percentageBased"));
 
             return property.isExpanded
-                ? name + name + ai + percentage + Spacing * 8 + Margin * 2
+                ? name + name + ai + runOnce + percentage + Spacing * 8 + Margin * 2
                 : name + Spacing * 2 + Margin * 2;
         }
 
@@ -27,10 +28,13 @@ namespace Aarthificial.Reanimation.Editor.Common
 
             var name = property.FindPropertyRelative("name");
             var ai = property.FindPropertyRelative("autoIncrement");
+            var runOnce = property.FindPropertyRelative("runOnce");
             var percentage = property.FindPropertyRelative("percentageBased");
 
             if (ai.boolValue)
                 percentage.boolValue = false;
+            else
+                runOnce.boolValue = false;
 
             var labelText = "Control driver";
             if (!string.IsNullOrEmpty(name.stringValue))
@@ -53,6 +57,13 @@ namespace Aarthificial.Reanimation.Editor.Common
                 position.y += Spacing;
                 position.height = EditorGUI.GetPropertyHeight(ai);
                 EditorGUI.PropertyField(position, ai);
+                position.y += position.height + Spacing;
+                EditorGUI.EndDisabledGroup();
+
+                EditorGUI.BeginDisabledGroup(!ai.boolValue);
+                position.y += Spacing;
+                position.height = EditorGUI.GetPropertyHeight(runOnce);
+                EditorGUI.PropertyField(position, runOnce);
                 position.y += position.height + Spacing;
                 EditorGUI.EndDisabledGroup();
 

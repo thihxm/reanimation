@@ -8,6 +8,7 @@ namespace Aarthificial.Reanimation.Nodes
     {
         [SerializeField] protected string name;
         [SerializeField] protected bool autoIncrement;
+        [SerializeField] protected bool runOnce;
         [SerializeField] protected bool percentageBased;
         [HideInInspector] [SerializeField] protected string guid = Guid.NewGuid().ToString();
 
@@ -15,10 +16,11 @@ namespace Aarthificial.Reanimation.Nodes
         {
         }
 
-        public ControlDriver(string name = null, bool autoIncrement = false, bool percentageBased = false)
+        public ControlDriver(string name = null, bool autoIncrement = false, bool runOnce = false, bool percentageBased = false)
         {
             this.name = name;
             this.autoIncrement = autoIncrement;
+            this.runOnce = runOnce;
             this.percentageBased = percentageBased;
         }
 
@@ -37,8 +39,14 @@ namespace Aarthificial.Reanimation.Nodes
             }
 
             int driverValue = previousState.Get(driverName) % size;
-            if (autoIncrement)
-                nextState.Set(driverName, (driverValue + 1) % size);
+            if (autoIncrement) {
+                var nextValue = (driverValue + 1) % size;
+                if (runOnce && nextValue == 0) {
+                    return driverValue;
+                } else {
+                  nextState.Set(driverName, nextValue);
+                }
+            }
 
             return driverValue;
         }
