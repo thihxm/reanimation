@@ -60,7 +60,7 @@ namespace Aarthificial.Reanimation
     public int Fps
     {
       get => fps;
-      set => fps = MathF.Max(value, 1);
+      set => fps = (int)MathF.Max(value, 1);
     }
 
     [Tooltip("Drivers marked as temporary are removed from the state if they were not set during the previous resolution.")]
